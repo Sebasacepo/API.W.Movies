@@ -1,9 +1,11 @@
 ﻿using API.W.Movies.DAL;
 using API.W.Movies.DAL.Models;
 using API.W.Movies.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace API.W.Movies.Repository
-{        
+{
     public class CategoryRepository : ICategoryRepository
     {
 
@@ -14,39 +16,74 @@ namespace API.W.Movies.Repository
         {
             _context = context;
         }
-        public Task<bool> CategoryExistsByIdAsync(int id)
-        {
-            throw new NotImplementedException();
+        public async Task<bool> CategoryExistsByIdAsync(int id)
+        {       
+
+            return await _context.Categories
+                .AsNoTracking()
+                .AnyAsync(c => c.Id == id);
         }
 
-        public Task<bool> CategoryExistsByNameAsync(string name)
+        public async Task<bool> CategoryExistsByNameAsync(string name)
         {
-            throw new NotImplementedException();
+            return await _context.Categories
+                .AsNoTracking()
+                .AnyAsync(c => c.Name == name);
         }
 
-        public Task<bool> CreateCategoryAsync(Category category)
+        public async Task<bool> CreateCategoryAsync(Category category)
         {
-            throw new NotImplementedException();
+            category.CreateDate = DateTime.UtcNow;
+            await _context.Categories.AddAsync(category);
+
+            return await SaveAsync();
+
         }
 
-        public Task<bool> DeleteCategoryAsync(int id)
+        public async Task<bool> DeleteCategoryAsync(int id)
         {
-            throw new NotImplementedException();
+            var category = await GetCategoryAsync(id);
+            if (category == null)
+            {
+                return false;
+            }
+
+            _context.Categories.Remove(category);
+
+            return await SaveAsync();
         }
 
-        public Task<ICollection<Category>> GetCategoriesAsync()
+        public async Task<ICollection<Category>> GetCategoriesAsync()
         {
-            throw new NotImplementedException();
+            var categories = await _context.Categories
+                .AsNoTracking()
+                .OrderBy(c => c.Name)
+                .ToListAsync();
+            return categories;
         }
 
-        public Task<Category> GetCategoryAsync(int id)
+        public async Task<Category> GetCategoryAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Categories
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id);
+         
         }
 
-        public Task<bool> UpdateCategoryAsync(Category category)
+        public async Task<bool> UpdateCategoryAsync(Category category)
         {
-            throw new NotImplementedException();
+            category.UpdateDate = DateTime.UtcNow;
+            _context.Categories.Update(category);            
+
+            return true;
         }
+
+        #region private methods
+
+        private async Task<bool> SaveAsync()      
+        {           
+            return await _context.SaveChangesAsync() >= 0 ? true : false;
+        }
+        #endregion
     }
 }

@@ -7,5 +7,6 @@ namespace API.W.Movies.DAL.Models
         [Required] //Este data annotation está indicando que este campo es obligatorio
         [Display(Name = "Nombre de la categoría")]
         public string Name { get; set; }
+        public DateTime UpdateDate { get; internal set; }
     }
 }
