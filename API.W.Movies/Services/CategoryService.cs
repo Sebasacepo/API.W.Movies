@@ -1,4 +1,5 @@
 ﻿using API.W.Movies.DAL.Models;
+using API.W.Movies.DAL.Models.DTO;
 using API.W.Movies.Repository.IRepository;
 using API.W.Movies.Services.IServices;
 using AutoMapper;
@@ -35,13 +36,13 @@ namespace API.W.Movies.Services
             throw new NotImplementedException();
         }
 
-        public async Task<ICollection<Category>> GetCategoriesAsync()
+        public async Task<ICollection<CategoryDto>> GetCategoriesAsync()
         {
             var categories =  _categoryRepository.GetCategoriesAsync();
-            var categoriesDto = _mapper.Map<ICollection<CategoryDto>>(categories);
+            return _mapper.Map<ICollection<CategoryDto>>(categories);
         }
 
-        public Task<Category> GetCategoryAsync(int id)
+        public Task<CategoryDto> GetCategoryAsync(int id)
         {
             throw new NotImplementedException();
         }

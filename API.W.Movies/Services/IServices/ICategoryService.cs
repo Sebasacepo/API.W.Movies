@@ -1,11 +1,12 @@
 ﻿using API.W.Movies.DAL.Models;
+using API.W.Movies.DAL.Models.DTO;
 
 namespace API.W.Movies.Services.IServices
 {
     public interface ICategoryService
     {
-        Task<ICollection<Category>> GetCategoriesAsync(); //Me retorna una lista de categorías
-        Task<Category> GetCategoryAsync(int id); //Me retorna una categoría por su Id
+        Task<ICollection<CategoryDto>> GetCategoriesAsync(); //Me retorna una lista de categorías
+        Task<CategoryDto> GetCategoryAsync(int id); //Me retorna una categoría por su Id
         Task<bool> CategoryExistsByIdAsync(int id); //Me dice si una categoría existe por su Id
         Task<bool> CategoryExistsByNameAsync(string name); //Me dice si una categoría existe por su Id
         Task<bool> CreateCategoryAsync(Category category); //Me crea una categoría
